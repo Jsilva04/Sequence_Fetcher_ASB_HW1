@@ -36,7 +36,6 @@ def sequence_fetcher(database, search_term):
         "query_key": query_key,
         "webenv": webenv,
         "rettype": "fasta",
-        "retmode": "text",
     }
 
     # Fetching the sequences
