@@ -6,15 +6,15 @@
 import sys
 import requests
 
-def sequence_fetcher(database, search_term): 
-    # Base URL for Entrez API
-    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-    
-    # URLs for different API endpoints
-    url_search = url + "esearch.fcgi"
-    url_fetch = url + "efetch.fcgi"
-    url_history = url + "esummary.fcgi"
+# Base URL for Entrez API
+URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
 
+# URLs for different API endpoints
+URL_esearch = URL + "esearch.fcgi"
+URL_efetch = URL + "efetch.fcgi"
+URL_history = URL + "esummary.fcgi"
+
+def esearch_sequence(database, search_term): 
     # Parameters for the search endpoint
     search_params = {
         "db": database,
@@ -24,12 +24,16 @@ def sequence_fetcher(database, search_term):
     }
 
     # Performing the search to get the list of IDs
-    search = requests.get(url_search, params = search_params)
+    search = requests.get(URL_esearch, params = search_params)
     search_data = search.json()
     id_list = search_data["esearchresult"]["idlist"]
     query_key = search_data["esearchresult"]["querykey"]
     webenv = search_data["esearchresult"]["webenv"]
 
+    return (webenv, query_key)
+
+
+def efetch_sequence(webenv, query_key):
     # Parameters for fetching the sequences
     fetch_params = {
         "db": database,
@@ -39,27 +43,25 @@ def sequence_fetcher(database, search_term):
     }
 
     # Fetching the sequences
-    fetch = requests.get(url_fetch, params = fetch_params)
+    fetch = requests.get(URL_efetch, params = fetch_params)
     fasta_data = fetch.text
 
     return fasta_data
 
 if __name__== "__main__":
     # Checking command-line arguments
-    if len(sys.argv) !=4:
-        print("Usage: python sequences_retriever.py <database> <search_term> <output_file>")
+    if len(sys.argv) !=3:
+        print("Usage: python sequences_retriever.py <database> <search_term>")
         sys.exit(1)
 
     # Retrieving command-line arguments
     database = sys.argv[1]
     search_term = sys.argv[2]
-    output_file = sys.argv[3]
+    #output_file = sys.argv[3]
 
     # Fetching sequences
-    fasta_data = sequence_fetcher(database, search_term)
+    WEBENV, QK =  esearch_sequence(database, search_term)
+    fasta_data = efetch_sequence(WEBENV, QK)
 
-    # Writing sequences to the output file
-    with open(output_file, "w") as fasta_file:
-        fasta_file.write(fasta_data)
+    print(fasta_data)
 
-    print("Sequences retrieved and written to", output_file)
