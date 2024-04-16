@@ -48,7 +48,7 @@ def efetch_sequence(webenv, query_key):
 
     return fasta_data
 
-if __name__== "__main__":
+if __name__ == "__main__":
     # Checking command-line arguments
     if len(sys.argv) !=3:
         print("Usage: python sequences_retriever.py <database> <search_term>")
