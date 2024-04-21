@@ -5,7 +5,8 @@ This is a small script to retrieve sequences from a database, using 'history' AP
 ```bash
 python sequences_retriever.py [database] [search term]
 ```
-Example: python sequences_retriever.py nucleotide "Psammodromus algirus" \n Note: You can add "> output file" so that the output goes to a file; otherwise, it will be written to STDOUT.
+Example: python sequences_retriever.py nucleotide "Psammodromus algirus".
+Note: You can add "> output file" so that the output goes to a file; otherwise, it will be written to STDOUT.
 
 ## Requisites 
 * Python
